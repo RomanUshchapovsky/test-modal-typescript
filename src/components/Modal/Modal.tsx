@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   Modal,
   Backdrop,
@@ -19,8 +19,10 @@ const ModalWindow = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const rootRef = useRef(null);
+  
   return (
-      <div>
+      <div ref={rootRef}>
         <Button
           variant="contained"
           color="primary" className={classes.button}
@@ -39,6 +41,7 @@ const ModalWindow = () => {
           BackdropProps={{
             timeout: 500
           }}
+          container={() => rootRef.current}
         >
           <Fade in={open}>
             <div className={classes.paper}>

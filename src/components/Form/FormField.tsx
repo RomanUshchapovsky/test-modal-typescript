@@ -11,15 +11,19 @@ import {
 
 import useStyles from './styles';
 import styles from './FormField.module.css'
+import IFormValueType from '../Interface';
+// import IFileType from '../Interface';
 
 const EXTENSIONS = ['xlsx', 'xls', 'csv']
 
 const FormField: React.FC = (props) => {
   const classes = useStyles();
-
+  interface IFileType {
+    file: string[] | number[];
+    name: string;
+  }
   // =======import excel=========
-
-  const getExention = (file: any) => {
+  const getExention = (file: IFileType) => {
     const parts = file.name.split('.')
     const extension = parts[parts.length - 1]
     return EXTENSIONS.includes(extension) // return boolean
@@ -35,7 +39,7 @@ const FormField: React.FC = (props) => {
       const workSheetName = workBook.SheetNames[0]
       const workSheet = workBook.Sheets[workSheetName]
       //convert to array
-      const fileData: Array<any> = XLSX.utils.sheet_to_json(workSheet, { header: 1 })
+      const fileData: Array<string> | any = XLSX.utils.sheet_to_json(workSheet, { header: 1 })
       //for render data
       const [titlesArray, ...restDataArray] = fileData
       const data = titlesArray.slice(0, 5).map((title: string, idx: number) => ({
@@ -53,11 +57,7 @@ const FormField: React.FC = (props) => {
     }
   }
   // =======================================================
-  interface IFormValueType {
-    firstName: string,
-    lastName: string,
-    data: any,
-  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -66,7 +66,7 @@ const FormField: React.FC = (props) => {
           Transition modal
         </Typography>
         <Formik
-          initialValues={{
+          initialValues ={{
             firstName: "",
             lastName: "",
             data: [],
