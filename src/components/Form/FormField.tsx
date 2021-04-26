@@ -11,17 +11,13 @@ import {
 
 import useStyles from './styles';
 import styles from './FormField.module.css'
-import IFormValueType from '../Interface';
-// import IFileType from '../Interface';
+import { IFormValueType, IFileType } from '../Interfaces';
 
 const EXTENSIONS = ['xlsx', 'xls', 'csv']
 
 const FormField: React.FC = (props) => {
   const classes = useStyles();
-  interface IFileType {
-    file: string[] | number[];
-    name: string;
-  }
+
   // =======import excel=========
   const getExention = (file: IFileType) => {
     const parts = file.name.split('.')
@@ -57,7 +53,6 @@ const FormField: React.FC = (props) => {
     }
   }
   // =======================================================
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
