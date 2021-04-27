@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import XLSX from 'xlsx';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import {
@@ -11,25 +11,27 @@ import {
 
 import useStyles from './styles';
 import styles from './FormField.module.css'
-import { IFormValueType, IFileType } from '../Interfaces';
+import { IFormValueType } from '../types/Interfaces';
 
 const EXTENSIONS = ['xlsx', 'xls', 'csv']
 
-const FormField: React.FC = (props) => {
+const FormField: FC = (props) => {
   const classes = useStyles();
 
   // =======import excel=========
-  const getExention = (file: IFileType) => {
+  const getExention = (file: File) => {
     const parts = file.name.split('.')
     const extension = parts[parts.length - 1]
     return EXTENSIONS.includes(extension) // return boolean
   }
   const importExcel = (e: React.ChangeEvent<HTMLInputElement>, callback: Function) => {
-    const file = (e.target as any).files[0]
+    const target = e.target as HTMLInputElement;
+    const file = (target.files as FileList)[0]
     const reader = new FileReader()
+
     reader.onload = (e) => {
       //parse data
-      const binaryStr = (e.target as any).result
+      const binaryStr = (reader.result as string)
       const workBook = XLSX.read(binaryStr, { type: "binary" })
       //get first sheet
       const workSheetName = workBook.SheetNames[0]
@@ -42,7 +44,10 @@ const FormField: React.FC = (props) => {
         [title]: restDataArray[0][idx], selected: ""
       })
       )
-      callback("data", data)
+      const fileName: string = (file.name)
+      // console.log("file", fileName);
+
+      callback("data", data, fileName)
     }
     if (file) {
       if (getExention(file)) {
@@ -61,7 +66,7 @@ const FormField: React.FC = (props) => {
           Transition modal
         </Typography>
         <Formik
-          initialValues ={{
+          initialValues={{
             firstName: "",
             lastName: "",
             data: [],
@@ -116,7 +121,7 @@ const FormField: React.FC = (props) => {
                   htmlFor="file"
                 > Choose file
                 </label>
-                {/* <div id="custom-text">No file chosen, yet.</div> */}
+                {/* <span>{fileName}</span> */}
                 <Field
                   className={styles.fileInput}
                   id="file"

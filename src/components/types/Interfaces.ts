@@ -1,13 +1,9 @@
 interface IFormValueType {
   firstName: string,
   lastName: string,
-  data: Array<any>,
+  data: Array<string & number>,
 }
-interface IFileType {
-  file: string[] | number[];
-  name: string;
-}
+
 export type {
     IFormValueType,
-    IFileType,
 }
